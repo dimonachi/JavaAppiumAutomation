@@ -5,14 +5,14 @@ public class MainClassTest  {
 
     MainClass number = new MainClass();
     @Test
-    public void testGetLocalNumber() {
-        if (number.getLocalNumber() == 14)
+    public void testGetClassNumber() {
+        if (number.getClassNumber() > 45)
         {
-            System.out.println("Метод возвращает верное число!");
+            System.out.println("Метод возвращает верное значение!");
         }
         else
         {
-            Assert.fail("Метод возвращает неверное число!");
+            Assert.fail("Метод возвращает неверное значение!");
         }
     }
 }
