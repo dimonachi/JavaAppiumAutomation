@@ -1,18 +1,16 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
-import org.apache.bcel.ExceptionConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+
 public class FirstTest {
 
     private AppiumDriver driver;
@@ -40,35 +38,30 @@ public class FirstTest {
 
     @Test
     public void firstTest() {
-        WebElement element = driver.findElementByXPath("//*[contains(@text, 'Skip')]");
-        element.click();
 
-        WebElement element_to_init_search = driver.findElementByXPath("//*[contains(@text, 'Search Wikipedia')]");
-        element_to_init_search.click();
+        WebElement skip = driver.findElementByXPath("//*[contains(@text, 'Skip')]");
+        skip.click();
 
-        WebElement element_to_enter_search_line = waitForElementPresentByXPath(
+        WebElement search = driver.findElementByXPath("//*[contains(@text, 'Search Wikipedia')]");
+        search.click();
+
+        assertElementHasText(
                 "//*[contains(@text, 'Search Wikipedia')]",
-                "Cannot find search input",
+                "Search Wikipedia",
+                "Cannot find ",
                 10
-
-
         );
-                //driver.findElementById("org.wikipedia:id/search_src_text");
-        element_to_enter_search_line.sendKeys("Java");
-        waitForElementPresentByXPath(
-                "//*[@text = 'Object-oriented programming language']",
-                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
-                15
-        );
+
     }
 
-    private WebElement waitForElementPresentByXPath(String xpath, String error_message, long timeoutInSeconds)
-    {
-        WebDriverWait wait = new WebDriverWait(driver,timeoutInSeconds);
-        wait.withMessage(error_message + "\n");
+    private void assertElementHasText(String xpath, String value, String error_message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + value + "\n");
         By by = By.xpath(xpath);
-        return wait.until(
-                ExpectedConditions.presenceOfElementLocated(by)
+        wait.until(
+                ExpectedConditions.textToBePresentInElementLocated(by, value)
         );
     }
+
+
 }
