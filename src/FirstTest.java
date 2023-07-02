@@ -1,9 +1,16 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
+import org.apache.bcel.ExceptionConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 public class FirstTest {
@@ -11,8 +18,7 @@ public class FirstTest {
     private AppiumDriver driver;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         capabilities.setCapability("platformName", "Android");
@@ -28,14 +34,41 @@ public class FirstTest {
     }
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         driver.quit();
     }
 
     @Test
-    public void firstTest()
+    public void firstTest() {
+        WebElement element = driver.findElementByXPath("//*[contains(@text, 'Skip')]");
+        element.click();
+
+        WebElement element_to_init_search = driver.findElementByXPath("//*[contains(@text, 'Search Wikipedia')]");
+        element_to_init_search.click();
+
+        WebElement element_to_enter_search_line = waitForElementPresentByXPath(
+                "//*[contains(@text, 'Search Wikipedia')]",
+                "Cannot find search input",
+                10
+
+
+        );
+                //driver.findElementById("org.wikipedia:id/search_src_text");
+        element_to_enter_search_line.sendKeys("Java");
+        waitForElementPresentByXPath(
+                "//*[@text = 'Object-oriented programming language']",
+                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
+                15
+        );
+    }
+
+    private WebElement waitForElementPresentByXPath(String xpath, String error_message, long timeoutInSeconds)
     {
-        System.out.println("First test run");
+        WebDriverWait wait = new WebDriverWait(driver,timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+        By by = By.xpath(xpath);
+        return wait.until(
+                ExpectedConditions.presenceOfElementLocated(by)
+        );
     }
 }
