@@ -38,7 +38,7 @@ public class FirstTest {
     }
 
     @Test
-    public void testCancelSearch()
+    public void testCheckWord()
     {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Skip')]"),
@@ -57,25 +57,10 @@ public class FirstTest {
                 10
         );
         //найдено несколько статей
-        waitForElementLook(
+        waitForElementFind(
                 By.id("org.wikipedia:id/page_list_item_title"),
                 "Cannot find more than 1 article",
                 10
-        );
-        waitForElementAndClear(
-                By.id("org.wikipedia:id/search_src_text"),
-                "Cannot find search field",
-                10
-        );
-        waitForElementAndClick(
-                By.id("Navigate up"),
-                "Cannot find '<-' to return",
-                5
-        );
-        waitForElementNotPresent(
-                By.id("Navigate up"),
-                "'<-' to return",
-                5
         );
     }
 
@@ -124,5 +109,13 @@ public class FirstTest {
                 ExpectedConditions.numberOfElementsToBeMoreThan(by,1)
         );
     }
+    private void waitForElementFind(By by, String error_message,long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+        wait.until(
+                ExpectedConditions.textToBePresentInElementLocated(by,"Java")
+        );
+    }
+
 }
 
