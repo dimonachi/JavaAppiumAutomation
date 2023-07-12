@@ -1,7 +1,6 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -38,84 +37,31 @@ public class FirstTest {
     }
 
     @Test
-    public void testCheckWord()
-    {
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Skip')]"),
-                "Cannot find 'Skip'",
-                5
-        );
-        waitForElementAndClick(
-                By.id("org.wikipedia:id/search_container"),
-                "Cannot find 'Search Wikipedia' input",
-                5
-        );
-        waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Java",
-                "Cannot find search input",
+    public void firstTest() {
+
+        WebElement skip = driver.findElementByXPath("//*[contains(@text, 'Skip')]");
+        skip.click();
+
+        WebElement search = driver.findElementByXPath("//*[contains(@text, 'Search Wikipedia')]");
+        search.click();
+
+        assertElementHasText(
+                "//*[contains(@text, 'Search Wikipedia')]",
+                "Search Wikipedia",
+                "Cannot find ",
                 10
         );
-        //найдено несколько статей
-        waitForElementFind(
-                By.id("org.wikipedia:id/page_list_item_title"),
-                "Cannot find more than 1 article",
-                10
-        );
+
     }
 
-    private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
+    private void assertElementHasText(String xpath, String value, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(error_message + "\n");
-        return wait.until(
-                ExpectedConditions.presenceOfElementLocated(by)
-        );
-    }
-
-    private WebElement waitForElementPresent(By by, String error_message) {
-        return waitForElementPresent(by, error_message, 5);
-    }
-
-
-    private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
-        element.click();
-        return element;
-    }
-
-    private WebElement waitForElementAndSendKeys(By by, String value, String error_message,
-                                                 long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
-        element.sendKeys(value);
-        return element;
-    }
-
-    private boolean waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(error_message + "\n");
-        return wait.until(
-                ExpectedConditions.invisibilityOfElementLocated(by)
-        );
-    }
-    private WebElement waitForElementAndClear(By by, String error_message, long timeoutInSeconds){
-            WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
-            element.clear();
-            return element;
-        }
-    private void waitForElementLook(By by, String error_message,long timeoutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(error_message + "\n");
+        wait.withMessage(error_message + value + "\n");
+        By by = By.xpath(xpath);
         wait.until(
-                ExpectedConditions.numberOfElementsToBeMoreThan(by,1)
+                ExpectedConditions.textToBePresentInElementLocated(by, value)
         );
     }
-    private void waitForElementFind(By by, String error_message,long timeoutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(error_message + "\n");
-        wait.until(
-                ExpectedConditions.textToBePresentInElementLocated(by,"Java")
-        );
-    }
+
 
 }
-
