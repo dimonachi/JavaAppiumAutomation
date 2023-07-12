@@ -39,7 +39,7 @@ public class FirstTest {
         driver.quit();
     }
 
-    @Test
+    /*@Test
     public void firstTest() {
 
         waitForElementAndClick(
@@ -174,10 +174,10 @@ public class FirstTest {
                 20
         );
 
-    }
+    }*/
 
     @Test
-    public void saveFirstArticleToMyList(){
+    public void saveTwoArticleToMyList(){
 
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Skip')]"),
@@ -226,7 +226,7 @@ public class FirstTest {
                 5
         );
 
-        String name_of_folder = "Learning programming";
+        String name_of_folder = "Test1";
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/text_input"),
                 name_of_folder,
@@ -243,11 +243,51 @@ public class FirstTest {
                 "Cannot find '<-' button",
                 5
         );
+
+
+        //Добавление второй статьи
+        waitForElementAndClick(
+                By.xpath("//*[@text = 'Island in Indonesia']"),
+                "Cannot find 'Island in Indonesia'",
+                5
+        );
+        waitForElementPresent(
+                By.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.drawerlayout.widget.DrawerLayout/android.widget.FrameLayout/android.widget.FrameLayout[1]/android.view.ViewGroup/android.view.ViewGroup/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.widget.TextView[1]"),
+                "Cannot find name of article",
+                20
+        );
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "Cannot find 'Save' button",
+                5
+        );
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "Cannot find 'Save' button",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text = 'Add to another reading list']"),
+                "Cannot find 'Add to another reading list'",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text ='"+ name_of_folder+ "']"),
+                "Cannot find 'Island in Indonesia'",
+                5
+        );
+        //Возвращение на главную страницу
         waitForElementAndClick(
                 By.id("Navigate up"),
                 "Cannot find '<-' button",
                 5
         );
+        waitForElementAndClick(
+                By.id("Navigate up"),
+                "Cannot find '<-' button",
+                5
+        );
+
         waitForElementAndClick(
                 By.id("org.wikipedia:id/nav_tab_reading_lists"),
                 "Cannot find 'Saved'",
@@ -258,16 +298,30 @@ public class FirstTest {
                 "Cannot find 'Learning programming' list",
                 5
         );
+        //удаление статьи
         swipeElementToLeft(
                 By.xpath("//*[@text = 'Java (programming language)']"),
                 "Cannot find article"
         );
 
-        waitForElementNotPresent(
-                By.xpath("//*[@text = 'Java (programming language)']"),
-                "Cannot delete saved article",
+        //Проверка, что вторая статья осталась
+        waitForElementPresent(
+                By.xpath("//*[@text = 'Island in Indonesia']"),
+                "Cannot find Island article",
                 5
         );
+        waitForElementAndClick(
+                By.xpath("//*[@text = 'Island in Indonesia']"),
+                "Cannot open Island article",
+                5
+        );
+        //Проверка, что открылась верная статья
+        waitForElementPresent(
+                By.xpath("//*[@text = 'Island in Indonesia']"),
+                "Cannot find Island article",
+                5
+        );
+
     }
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
