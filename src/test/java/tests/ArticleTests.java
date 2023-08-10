@@ -12,13 +12,12 @@ public class ArticleTests extends CoreTestCase {
     {
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
 
-        SearchPageObject.skipStartPage();
+
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
-        SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+        SearchPageObject.clickByArticleWithSubstring("bject-oriented programming language");
 
         ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
-        ArticlePageObject.waitForTitleElement();
         String article_title = ArticlePageObject.getArticleTitle();
 
         assertEquals(
@@ -33,10 +32,10 @@ public class ArticleTests extends CoreTestCase {
     {
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
 
-        SearchPageObject.skipStartPage();
+
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Appium");
-        SearchPageObject.clickByArticleWithSubstring("Automation for Apps");
+        SearchPageObject.clickByArticleWithSubstring("utomation for Apps");
 
         ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
         ArticlePageObject.waitForTitleElement();
@@ -50,10 +49,10 @@ public class ArticleTests extends CoreTestCase {
 
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
 
-        SearchPageObject.skipStartPage();
+
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
-        SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+        SearchPageObject.clickByArticleWithSubstring("bject-oriented programming language");
 
         ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
         ArticlePageObject.assertTitleOfArticlePresent();

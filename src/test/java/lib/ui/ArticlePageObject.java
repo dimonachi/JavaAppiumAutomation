@@ -1,30 +1,34 @@
 package lib.ui;
 
-
-import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class ArticlePageObject extends MainPageObject{
 
     private static final String
-        TITLE = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.drawerlayout.widget.DrawerLayout/android.widget.FrameLayout/android.widget.FrameLayout[1]/android.view.ViewGroup/android.view.ViewGroup/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.widget.TextView[1]",
-        FOOTER_ELEMENT = "//*[@text='View article in browser']",
-        SAVE_BUTTON = "org.wikipedia:id/page_save",
+        TITLE = "div>h1>[class='mw-page-title-main']",
+        FOOTER_ELEMENT = "footer",
+        OPTIONS_ADD_TO_MY_LIST_BUTTON = "li#page-actions-watch a#ca-watch.mw-ui-icon-wikimedia-star-base20",
+        OPTIONS_REMOVE_FROM_MY_LIST_BUTTON = "li#page-actions-watch a#ca-watch.mw-ui-icon-wikimedia-unStar-progressive",
+
+        CLOSE_ARTICLE_BUTTON="",
+
+
         ADD_TO_MY_LIST_BUTTON = "//*[@text = 'Add to another reading list']",
         CREATE_NEW_LIST_BUTTON = "//*[@text = 'Create new']",
         MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
         MY_LIST_OK_BUTTON = "android:id/button1",
         RETURN_ARTICLE_BUTTON = "Navigate up",
         NAME_OF_FOLDER_TPL = "//*[@text = '{NameOfFolder}']";
-    public ArticlePageObject(AppiumDriver driver)
+    public ArticlePageObject(RemoteWebDriver driver)
     {
         super(driver);
     }
 
     public WebElement waitForTitleElement()
     {
-        return this.waitForElementPresent(By.xpath(TITLE),"Cannot find article title on page", 15);
+        return this.waitForElementPresent(By.cssSelector(TITLE),"Cannot find article title on page", 15);
 
     }
 
@@ -37,13 +41,13 @@ public class ArticlePageObject extends MainPageObject{
     public String getArticleTitle()
     {
         WebElement title_element = waitForTitleElement();
-        return title_element.getAttribute("text");
+        return title_element.getText();
     }
 
     public void swipeToFooter()
     {
         this.swipeUpToFindElement(
-                By.xpath(FOOTER_ELEMENT),
+                By.cssSelector(FOOTER_ELEMENT),
                 "Cannot find the end of article",
                 20
         );
@@ -52,12 +56,12 @@ public class ArticlePageObject extends MainPageObject{
     public void addArticleToMyList(String name_of_folder)
     {
         this.waitForElementAndClick(
-                By.id(SAVE_BUTTON),
+                By.cssSelector(OPTIONS_ADD_TO_MY_LIST_BUTTON),
                 "Cannot find 'Save' button",
                 5
         );
         this.waitForElementAndClick(
-                By.id(SAVE_BUTTON),
+                By.cssSelector(OPTIONS_ADD_TO_MY_LIST_BUTTON),
                 "Cannot find 'Save' button",
                 5
         );
@@ -101,12 +105,12 @@ public class ArticlePageObject extends MainPageObject{
     public void addArticleToMyExistList(String name_of_folder)
     {
         this.waitForElementAndClick(
-                By.id(SAVE_BUTTON),
+                By.cssSelector(OPTIONS_ADD_TO_MY_LIST_BUTTON),
                 "Cannot find 'Save' button",
                 5
         );
         this.waitForElementAndClick(
-                By.id(SAVE_BUTTON),
+                By.cssSelector(OPTIONS_ADD_TO_MY_LIST_BUTTON),
                 "Cannot find 'Save' button",
                 5
         );
@@ -121,12 +125,37 @@ public class ArticlePageObject extends MainPageObject{
 
     }
 
+    public void addArticleToMySaved(){
+        this.removeArticlesFromMySavedIfItAdded();
+        this.waitForElementAndClick(
+                By.cssSelector(OPTIONS_ADD_TO_MY_LIST_BUTTON),
+                "Cannot find button to add an article",
+                10
+        );
+    }
+    public void removeArticlesFromMySavedIfItAdded(){
+        if(this.isElementPresent(By.cssSelector(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON))){
+            this.waitForElementAndClick(
+                    By.cssSelector(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON),
+                    "Cannot click button to remove",
+                    10
+            );
+            this.waitForElementPresent(
+                    By.cssSelector(OPTIONS_ADD_TO_MY_LIST_BUTTON),
+                    "Cannot find button to add an article to saved list after removing",
+                    10
+            );
+        }
+    }
+
     public void assertTitleOfArticlePresent()
     {
         this.assertElementPresent(
-                By.xpath(TITLE),
+                By.cssSelector(TITLE),
                 "text",
                 "Cannot find title of article"
         );
     }
+
+
 }
